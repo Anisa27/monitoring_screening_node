@@ -17,7 +17,7 @@ app.use(
       extended: true,
     })
   )
-
+app.get('/getListBranch',screeningController.getListBranch)
 app.get('/getScoring',screeningController.getScoring)
 app.get('/getDetailGrading/:order_id',screeningController.getDetailGradingSc1)
 app.get('/getPayloadResult/:order_id',screeningController.getPayloadResult)

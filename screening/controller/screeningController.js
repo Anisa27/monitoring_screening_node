@@ -1,4 +1,6 @@
+const { request, response } = require("express");
 const conn = require("../config/conn.js");
+const axios = require('axios');
 
 const getScoring = (request, response) => {
   conn.conn.query(
@@ -118,7 +120,6 @@ const getDetailGradingSc1 = async (request, response) => {
 };
 
 const getPayloadRequest = async (request, response) => {
-
   const { order_id } = request.params;
   let req = [];
   let payload = [];
@@ -132,7 +133,7 @@ const getPayloadRequest = async (request, response) => {
           if (error) {
             throw error;
           }
-  
+
           payload = results.rows.map((row) => ({
             // key: row.id,
             brms_key_old: row.brms_key_old,
@@ -144,7 +145,7 @@ const getPayloadRequest = async (request, response) => {
         }
       );
     });
-  
+
     const payloadReq = await new Promise((resolve, reject) => {
       conn.conn.query(
         `select result_brms from sc1_order.order_application_brms where order_id = $1`,
@@ -153,7 +154,7 @@ const getPayloadRequest = async (request, response) => {
           if (error) {
             throw error;
           }
-  
+
           req = results.rows[0].result_brms.params;
           console.log("req ", req);
           resolve(req);
@@ -168,37 +169,34 @@ const getPayloadRequest = async (request, response) => {
           payload[key] = req[key];
         }
       }
-      resolve(payload)
+      resolve(payload);
     });
 
     response.status(200).json({
       payloadReq,
     });
-
   } catch (error) {
     console.error("Error:", error);
     response.status(500).json({ error: "Internal Server Error" });
   }
-
-
- 
 };
 
 const getPayloadReq = (request, response) => {
   const { order_id } = request.params;
   let request_payload = [];
- console.log('order '+order_id)
+  console.log("order " + order_id);
 
   conn.conn.query(
-    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc1_order.order_application_brms_payload where order_id = $1`,[order_id],
+    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc1_order.order_application_brms_payload where order_id = $1`,
+    [order_id],
     (error, results) => {
       if (error) {
         throw error;
       }
 
-      console.log('result ',results.rows)
+      console.log("result ", results.rows);
 
-      request_payload = results.rows.map(row => ({
+      request_payload = results.rows.map((row) => ({
         // key: row.id,
         brms_key_old: row.payload_key_brms_old,
         brms_key_new: row.payload_key_brms_new,
@@ -211,11 +209,11 @@ const getPayloadReq = (request, response) => {
         payload_dbl_val_3: row.payload_dbl_val_3,
         created_date: row.created_date,
         updated_date: row.updated_date,
-        status : row.status
+        status: row.status,
       }));
 
-     console.log('res ',request_payload)
-      const result_obj = {result: request_payload};
+      console.log("res ", request_payload);
+      const result_obj = { result: request_payload };
       response.status(200).json(result_obj);
     }
   );
@@ -361,18 +359,19 @@ const getDetailGradingSc2 = async (request, response) => {
 const getPayloadRequestSc2 = (request, response) => {
   const { order_id } = request.params;
   let request_payload = [];
- console.log('order '+order_id)
+  console.log("order " + order_id);
 
   conn.conn_sc2.query(
-    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc2_order.order_application_brms_payload where order_id = $1`,[order_id],
+    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc2_order.order_application_brms_payload where order_id = $1`,
+    [order_id],
     (error, results) => {
       if (error) {
         throw error;
       }
 
-      console.log('result ',results.rows)
+      console.log("result ", results.rows);
 
-      request_payload = results.rows.map(row => ({
+      request_payload = results.rows.map((row) => ({
         // key: row.id,
         brms_key_old: row.payload_key_brms_old,
         brms_key_new: row.payload_key_brms_new,
@@ -385,11 +384,11 @@ const getPayloadRequestSc2 = (request, response) => {
         payload_dbl_val_3: row.payload_dbl_val_3,
         created_date: row.created_date,
         updated_date: row.updated_date,
-        status : row.status
+        status: row.status,
       }));
 
-     console.log('res ',request_payload)
-      const result_obj = {result: request_payload};
+      console.log("res ", request_payload);
+      const result_obj = { result: request_payload };
       response.status(200).json(result_obj);
     }
   );
@@ -535,18 +534,19 @@ const getDetailGradingSc3 = async (request, response) => {
 const getPayloadRequestSc3 = (request, response) => {
   const { order_id } = request.params;
   let request_payload = [];
- console.log('order '+order_id)
+  console.log("order " + order_id);
 
   conn.conn_sc3.query(
-    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc3_order.order_application_brms_payload where order_id = $1`,[order_id],
+    `select payload_key_brms_old,payload_key_brms_new,payload_data_type,payload_str_val,payload_int_val,payload_dbl_val,payload_dbl_val_1,payload_dbl_val_2,payload_dbl_val_3,status,created_date,updated_date from sc3_order.order_application_brms_payload where order_id = $1`,
+    [order_id],
     (error, results) => {
       if (error) {
         throw error;
       }
 
-      console.log('result ',results.rows)
+      console.log("result ", results.rows);
 
-      request_payload = results.rows.map(row => ({
+      request_payload = results.rows.map((row) => ({
         // key: row.id,
         brms_key_old: row.payload_key_brms_old,
         brms_key_new: row.payload_key_brms_new,
@@ -559,11 +559,11 @@ const getPayloadRequestSc3 = (request, response) => {
         payload_dbl_val_3: row.payload_dbl_val_3,
         created_date: row.created_date,
         updated_date: row.updated_date,
-        status : row.status
+        status: row.status,
       }));
 
-     console.log('res ',request_payload)
-      const result_obj = {result: request_payload};
+      console.log("res ", request_payload);
+      const result_obj = { result: request_payload };
       response.status(200).json(result_obj);
     }
   );
@@ -589,6 +589,19 @@ const getPayloadResultSc3 = (request, response) => {
   );
 };
 
+const getListBranch = async (request, response) => {
+  try {
+    const apiUrl = "http://redis-mst-branch-dev.apps.ocp4dev.muf.co.id/getBranchArea";
+    const res = await axios.get(apiUrl);
+    const data = res.data;
+    response.status(200).json({
+      data,
+    });
+  } catch (error) {
+    console.error("Error:", error);
+    response.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 module.exports = {
   getScoring,
@@ -603,5 +616,6 @@ module.exports = {
   getScoringSc3,
   getDetailGradingSc3,
   getPayloadRequestSc3,
-  getPayloadResultSc3
+  getPayloadResultSc3,
+  getListBranch
 };
