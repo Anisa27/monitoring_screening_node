@@ -3,8 +3,19 @@ const conn = require("../config/conn.js");
 const axios = require('axios');
 
 const getScoring = (request, response) => {
+  const {cabang, no_order, periode, nama_customer} = request.body;
+  let query = ` json_result->> 'branch_code' = '`+ cabang +`'`;
+
+  if(no_order !== "" && no_order !== null){
+    query += ` and order_id = '`+no_order+`'`;
+  }
+  else if(nama_customer !== '' && nama_customer !== null){
+    query += ` and json_result->> 'customer_name' like '%`+nama_customer+`%'`
+  }
+
+  console.log("branch "+query)
   conn.conn.query(
-    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc1_order.order_application_scoring order by created_date desc limit 10`,
+    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc1_order.order_application_scoring where`+query,
     (error, results) => {
       if (error) {
         throw error;
@@ -240,8 +251,17 @@ const getPayloadResult = (request, response) => {
 };
 
 const getScoringSc2 = (request, response) => {
+  const {cabang, no_order, periode, nama_customer} = request.body;
+  let query = ` json_result->> 'branch_code' = '`+ cabang +`'`;
+
+  if(no_order !== "" && no_order !== null){
+    query += ` and order_id = '`+no_order+`'`;
+  }
+  else if(nama_customer !== '' && nama_customer !== null){
+    query += ` and json_result->> 'customer_name' like '%`+nama_customer+`%'`
+  }
   conn.conn_sc2.query(
-    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc2_order.order_application_scoring order by created_date desc limit 10`,
+    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc2_order.order_application_scoring where`+query,
     (error, results) => {
       if (error) {
         throw error;
@@ -415,8 +435,17 @@ const getPayloadResultSc2 = (request, response) => {
 };
 
 const getScoringSc3 = (request, response) => {
+  const {cabang, no_order, periode, nama_customer} = request.body;
+  let query = ` json_result->> 'branch_code' = '`+ cabang +`'`;
+
+  if(no_order !== "" && no_order !== null){
+    query += ` and order_id = '`+no_order+`'`;
+  }
+  else if(nama_customer !== '' && nama_customer !== null){
+    query += ` and json_result->> 'customer_name' like '%`+nama_customer+`%'`
+  }
   conn.conn_sc3.query(
-    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc3_order.order_application_scoring order by created_date desc limit 10`,
+    `SELECT order_id,json_result ->> 'order_created_date' as tanggal_order, json_result->> 'branch_desc' as cabang, json_result->> 'customer_name' as nama_customer, hasil_screening FROM sc3_order.order_application_scoring where`+query,
     (error, results) => {
       if (error) {
         throw error;

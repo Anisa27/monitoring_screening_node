@@ -18,7 +18,7 @@ app.use(
     })
   )
 app.get('/getListBranch',screeningController.getListBranch)
-app.get('/getScoring',screeningController.getScoring)
+app.post('/getScoring',screeningController.getScoring)
 app.get('/getDetailGrading/:order_id',screeningController.getDetailGradingSc1)
 app.get('/getPayloadResult/:order_id',screeningController.getPayloadResult)
 app.get('/getPayloadRequest/:order_id',screeningController.getPayloadReq)
